@@ -1,0 +1,29 @@
+{
+  "name": "herald_server",
+  "version": "1.0.0",
+  "description": "Server for Herald app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/al3mac/HeraldServer.git"
+  },
+  "keywords": [
+    "herald",
+    "android"
+  ],
+  "author": "szwagry",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/al3mac/HeraldServer/issues"
+  },
+  "homepage": "https://github.com/al3mac/HeraldServer#readme",
+  "dependencies": {
+    "hapi": "^10.1.0",
+    "leveldown": "^1.4.1",
+    "levelup": "^1.2.1",
+    "q": "^1.4.1"
+  }
+}
