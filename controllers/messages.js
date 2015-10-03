@@ -31,7 +31,7 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
               return fail(reply, 'Found no user connected to thing');
             } else {
               var token = user.token;
-              sendSampleMessage(token, reply);
+              sendSampleMessage(token, reply, message);
             }
           });
         }
@@ -41,10 +41,10 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
     }
   }
 
-  function sendSampleMessage(token, reply) {
+  function sendSampleMessage(token, reply, messageToSend) {
     var message = new gcm.Message();
     var regIds = [token];
-    message.addData('key1', 'msg1');
+    message.addData('data', messageToSend);
     sender.send(message, { registrationIds: regIds }, function(err, result) {
       if (err) {
         return fail(reply, 'Couldnt send message');
