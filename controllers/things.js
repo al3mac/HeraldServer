@@ -54,6 +54,16 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
       }
     });
 
+    //if you have free time please move it to user.js
+    server.route({
+      method: 'POST',
+      path: '/api/user/token',
+      handler: saveToken,
+      config: {
+        auth: 'token'
+      }
+    });
+
     function addThing(request, reply) {
       if (request.payload) {
         request.payload.id = shortid.generate();
@@ -162,6 +172,26 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
           return reply({id: thingId});
         }
       });
+    }
+
+    function saveToken(request, reply) {
+      if(request.payload && request.payload.token) {
+        var user = request.auth.credentials;
+        if(user) {
+          user.token = request.payload.token;
+          userDb.put(user.username, JSON.stringify(user), function(err) {
+            if(err) {
+              return fail(reply, 'Cannot save user data');
+            } else {
+              return reply({token: request.payload.token});
+            }
+          });
+        } else {
+          return fail(reply, 'User data was empty');
+        }
+      } else {
+        return fail(reply, 'Empty request');
+      }
     }
 
     function fail(reply, description) {
