@@ -1,2 +1,4 @@
 node_modules/
-mydb/
+thingsDb/
+userDb/
+server.log

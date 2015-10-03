@@ -4,12 +4,20 @@ var fs = require('fs');
 var winston = require('winston');
 var GoodWinston = require('good-winston');
 
-var db = levelup('./mydb');
+var userDb = levelup('./userDb');
+var thingsDb = levelup('./thingsDb');
 
 var secret = 'TestSecretNOTINPRODUCTION';
 
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)({json: false, colorize: true}),
+      new (winston.transports.File)({ filename: 'server.log', json:false, colorize: true})
+    ]
+  });
 
 var server = new Hapi.Server();
 server.connection({
@@ -27,7 +35,7 @@ server.register({
         response: '*',
         log: '*',
         error: '*'
-      }, winston)
+      }, logger)
     ]
   }
 }, function(err) {
@@ -39,10 +47,10 @@ server.register({
 fs.readdirSync('./controllers').forEach(function(file) {
   if (file.substr(-3) == '.js') {
     route = require('./controllers/' + file);
-    route.controller(server, db, secret);
+    route.controller(server, userDb, thingsDb, secret, logger);
   }
 });
 
 server.start(function() {
-  console.log('Server running at:', server.info.uri);
+  logger.debug('Server running at:', server.info.uri);
 });

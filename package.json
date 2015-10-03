@@ -25,9 +25,11 @@
     "good": "^6.4.0",
     "good-winston": "^1.0.0",
     "hapi": "^10.1.0",
+    "hapi-auth-jwt": "^3.0.0",
     "jsonwebtoken": "^5.4.0",
     "leveldown": "^1.4.1",
     "levelup": "^1.2.1",
+    "shortid": "^2.2.2",
     "winston": "^1.0.2"
   }
 }

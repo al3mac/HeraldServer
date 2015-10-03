@@ -1,7 +1,7 @@
 //user controller
 var jwt = require('jsonwebtoken');
 
-module.exports.controller = function(server, db, secret) {
+module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
   server.route({
     method: 'PUT',
     path: '/api/user/',
@@ -25,24 +25,24 @@ module.exports.controller = function(server, db, secret) {
   function saveUser(request, reply) {
     if(request.payload && request.payload.username) {
       var id = request.payload.username;
-      db.get(id, function(err, existingUser) {
+      userDb.get(id, function(err, existingUser) {
         if(existingUser) {
-          console.log("User with this id already exists "+id);
+          logger.debug("User with this id already exists "+id);
           return fail(reply, 'User with this id already exists');
         } else {
-          saveUserToDB(request, reply, id);
+          saveUserTouserDb(request, reply, id);
         }
       });
     } else {
-      console.log("Empty request");
+      logger.debug("Empty request");
       return fail(reply, 'Empty request or required fields missing');
     }
   }
 
-  function saveUserToDB(request, reply, id) {
-    db.put(id, JSON.stringify(request.payload), function(err) {
+  function saveUserTouserDb(request, reply, id) {
+    userDb.put(id, JSON.stringify(request.payload), function(err) {
       if(err) {
-        console.log("Error while saving user", err);
+        logger.debug("Error while saving user", err);
         return fail(reply, 'Error while saving user');
       } else {
         return reply({
@@ -53,9 +53,9 @@ module.exports.controller = function(server, db, secret) {
   }
 
   function getUser(request, reply) {
-    db.get(request.params.id, function(err, user) {
+    userDb.get(request.params.id, function(err, user) {
       if(err) {
-        console.log("Error while searching for user");
+        logger.debug("Error while searching for user");
         return fail(reply, 'Error while searching for user');
       } else {
         return reply(JSON.parse(user));
@@ -73,7 +73,7 @@ module.exports.controller = function(server, db, secret) {
   //Accepts {username: username, pass: hashOfUserPass}
   function loginUser(request, reply) {
     if(request.payload && request.payload.username && request.payload.pass) {
-        db.get(request.payload.username, function(err, user) {
+        userDb.get(request.payload.username, function(err, user) {
           if(err) {
             return fail(reply, 'No user found');
           } else {
