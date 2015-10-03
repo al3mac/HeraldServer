@@ -25,6 +25,23 @@ server.connection({
   port: server_port
 });
 
+var validate = function(request, decodedToken, callback) {
+  userDb.get(decodedToken.username, function(err, user) {
+      if(err) {
+        return callback(err, false, {});
+      } else {
+        return callback(err, true, JSON.parse(user));
+      }
+  });
+};
+
+server.register(require('hapi-auth-jwt'), function(error) {
+  server.auth.strategy('token', 'jwt', {
+    key: secret,
+    validateFunc: validate
+  });
+});
+
 server.register({
   register: require('good'),
   options: {
