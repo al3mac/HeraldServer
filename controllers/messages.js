@@ -11,7 +11,7 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
     }
   });
 
-  server.rout({
+  server.route({
     method: 'GET',
     path: '/api/messages/test',
     handler: sendTestMessage
