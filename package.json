@@ -4,7 +4,8 @@
   "description": "Server for Herald app",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -21,14 +22,12 @@
   },
   "homepage": "https://github.com/al3mac/HeraldServer#readme",
   "dependencies": {
-    "async": "^1.4.2",
     "good": "^6.4.0",
     "good-winston": "^1.0.0",
     "hapi": "^10.1.0",
     "jsonwebtoken": "^5.4.0",
     "leveldown": "^1.4.1",
     "levelup": "^1.2.1",
-    "q": "^1.4.1",
     "winston": "^1.0.2"
   }
 }
