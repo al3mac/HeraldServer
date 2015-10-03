@@ -6,21 +6,11 @@ var GoodWinston = require('good-winston');
 
 var db = levelup('./mydb');
 
+var secret = 'TestSecretNOTINPRODUCTION';
+
 var server = new Hapi.Server();
 server.connection({
   port: 3000
-});
-
-var logger = new(winston.Logger)({
-  transports: [
-    new(winston.transports.Console)({
-      json: false
-    }),
-    new(winston.transports.File)({
-      filename: 'server.log',
-      json: false
-    })
-  ]
 });
 
 server.register({
@@ -42,12 +32,10 @@ server.register({
   }
 });
 
-
-
 fs.readdirSync('./controllers').forEach(function(file) {
   if (file.substr(-3) == '.js') {
     route = require('./controllers/' + file);
-    route.controller(server, db, logger);
+    route.controller(server, db, secret);
   }
 });
 
