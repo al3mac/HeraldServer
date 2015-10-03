@@ -44,7 +44,7 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
     }, function(err, result) {
       if (err) return fail(reply, 'Couldnt send message');
       else return reply({
-        send: true
+        send: "true"
       });
     });
   }
