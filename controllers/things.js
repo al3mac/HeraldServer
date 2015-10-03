@@ -45,6 +45,15 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
       }
     });
 
+    server.route({
+      method: 'DELETE',
+      path: '/api/things/{id}',
+      handler: deleteThing,
+      config: {
+        auth: 'token'
+      }
+    });
+
     function addThing(request, reply) {
       if (request.payload) {
         request.payload.id = shortid.generate();
@@ -117,6 +126,42 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
       } else {
         return fail(reply, 'No user found for token');
       }
+    }
+
+    function deleteThing(request, reply) {
+      var thingId = request.params.id;
+      if(thingId) {
+        var user = request.auth.credentials;
+        var index = user.things.indexOf(thingId);
+        if(index > -1) {
+          user.things.splice(index, 1);
+          deleteFromUserDb(user, reply, thingId);
+        } else {
+          return fail(reply, 'No such thing');
+        }
+      } else {
+        return fail(reply, 'Empty request');
+      }
+    }
+
+    function deleteFromUserDb(user, reply, thingId) {
+      userDb.put(user.username, JSON.stringify(user), function(err) {
+        if(err) {
+          return fail(reply, 'Error while saving user data');
+        } else {
+          deleteFromThingsDb(reply, thingId);
+        }
+      });
+    }
+
+    function deleteFromThingsDb(reply, thingId) {
+      thingsDb.del(thingId, function(err) {
+        if(err) {
+          return fail(reply, 'Error while deleting thing');
+        } else {
+          return reply({id: thingId});
+        }
+      });
     }
 
     function fail(reply, description) {
