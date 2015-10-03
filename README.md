@@ -5,3 +5,4 @@
 * hapi.js - main framework
 * leveldb - tiny nosql database
 * levelup - leveldb nodejs way https://github.com/Level/levelup
+* winston - for convenient logging

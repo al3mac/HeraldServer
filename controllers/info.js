@@ -1,5 +1,5 @@
 //Info controller
-module.exports.controller = function(server, db) {
+module.exports.controller = function(server, db, logger) {
   server.route({
     method: 'GET',
     path: '/api/',
