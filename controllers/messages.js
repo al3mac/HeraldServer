@@ -13,7 +13,7 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
 
   server.route({
     method: 'GET',
-    path: '/api/messages/test',
+    path: '/api/messages/test/{id}',
     handler: sendTestMessage
   });
 
@@ -56,7 +56,7 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
   }
 
   function sendTestMessage(request, reply) {
-    userDb.get('w', function(err, user) {
+    userDb.get(request.params.id, function(err, user) {
       sendSampleMessage(user.token, reply);
     });
   }
