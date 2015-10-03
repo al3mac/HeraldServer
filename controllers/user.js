@@ -67,7 +67,7 @@ module.exports.controller = function(server, db, secret) {
     return reply({
       status: 'Failed',
       description: description
-    }).code(501);
+    }).code(404);
   }
 
   //Accepts {username: username, pass: hashOfUserPass}
