@@ -1,5 +1,4 @@
 //user controller
-var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 
 module.exports.controller = function(server, db, secret) {
@@ -17,15 +16,15 @@ module.exports.controller = function(server, db, secret) {
 
   server.route({
     method: 'POST',
-    path: '/api/user/login/{id}',
+    path: '/api/user/login',
     handler: loginUser
   });
 
+
+  //username must be present in payload
   function saveUser(request, reply) {
-    if(request.payload) {
-      var shasum = crypto.createHash('sha1');
-      shasum.update(JSON.stringify(request.payload));
-      var id = shasum.digest('hex');
+    if(request.payload && request.payload.username) {
+      var id = request.payload.username;
       db.get(id, function(err, existingUser) {
         if(existingUser) {
           console.log("User with this id already exists "+id);
@@ -36,7 +35,7 @@ module.exports.controller = function(server, db, secret) {
       });
     } else {
       console.log("Empty request");
-      return fail(reply, 'Empty request');
+      return fail(reply, 'Empty request or required fields missing');
     }
   }
 
@@ -47,7 +46,7 @@ module.exports.controller = function(server, db, secret) {
         return fail(reply, 'Error while saving user');
       } else {
         return reply({
-          id: id
+          username: id
         });
       }
     });
@@ -74,7 +73,7 @@ module.exports.controller = function(server, db, secret) {
   //Accepts {username: username, pass: hashOfUserPass}
   function loginUser(request, reply) {
     if(request.payload && request.payload.username && request.payload.pass) {
-        db.get(request.params.id, function(err, user) {
+        db.get(request.payload.username, function(err, user) {
           if(err) {
             return fail(reply, 'No user found');
           } else {
