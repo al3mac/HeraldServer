@@ -11,6 +11,12 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
     }
   });
 
+  server.rout({
+    method: 'GET',
+    path: '/api/messages/test',
+    handler: sendTestMessage
+  });
+
   function sendMessage(request, reply) {
     if (request.payload && request.payload.id && request.payload.message) {
       var id = request.payload.id;
@@ -46,6 +52,12 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
       else return reply({
         send: "true"
       });
+    });
+  }
+
+  function sendTestMessage(request, reply) {
+    userDb.get('w', function(err, user) {
+      sendSampleMessage(user.token, reply);
     });
   }
 
