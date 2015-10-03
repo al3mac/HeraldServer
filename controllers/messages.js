@@ -1,6 +1,6 @@
 var gcm = require('node-gcm');
 module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
-  var sender = gcm.Sender('759198214800');
+  var sender = gcm.Sender('AIzaSyDN7nitwMpn5uaRz_DXzH5LhvC7mvJrFhE');
 
   server.route({
     method: 'POST',
@@ -45,19 +45,20 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
     var message = new gcm.Message();
     var regIds = [token];
     message.addData('key1', 'msg1');
-    sender.send(message, {
-      registrationIds: regIds
-    }, function(err, result) {
-      if (err) return fail(reply, 'Couldnt send message');
-      else return reply({
-        send: "true"
-      });
+    sender.send(message, { registrationIds: regIds }, function(err, result) {
+      if (err) {
+        return fail(reply, 'Couldnt send message');
+      } else {
+        return reply({
+          send: "true"
+        });
+      }
     });
   }
 
   function sendTestMessage(request, reply) {
     userDb.get(request.params.id, function(err, user) {
-      sendSampleMessage(user.token, reply);
+      sendSampleMessage(JSON.parse(user).token, reply);
     });
   }
 
