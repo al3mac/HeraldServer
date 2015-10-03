@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/al3mac/HeraldServer#readme",
   "dependencies": {
+    "async": "^1.4.2",
     "hapi": "^10.1.0",
     "leveldown": "^1.4.1",
     "levelup": "^1.2.1",
