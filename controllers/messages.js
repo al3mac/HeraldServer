@@ -25,12 +25,12 @@ module.exports.controller = function(server, userDb, thingsDb, secret, logger) {
         if (err) {
           return fail(reply, 'No thing with that id found');
         } else {
-          var username = thing.username;
+          var username = JSON.parse(thing).username;
           userDb.get(username, function(err, user) {
             if (err) {
               return fail(reply, 'Found no user connected to thing');
             } else {
-              var token = user.token;
+              var token = JSON.parse(user).token;
               sendSampleMessage(token, reply, message);
             }
           });
